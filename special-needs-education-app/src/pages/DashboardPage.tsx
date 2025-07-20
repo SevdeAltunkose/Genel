@@ -33,15 +33,18 @@ import {
   Settings as SettingsIcon,
   Boy as BoyIcon,
   Girl as GirlIcon,
+  AccountTree as AccountTreeIcon,
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { useChild } from '../contexts/ChildContext';
 import { Child } from '../types';
+import ConceptMapVisualization from '../components/ConceptMapVisualization';
 
 const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
   const { children, addChild, setCurrentChild } = useChild();
   const [openDialog, setOpenDialog] = useState(false);
+  const [showConceptMap, setShowConceptMap] = useState(false);
   const [newChild, setNewChild] = useState({
     name: '',
     age: 3,
@@ -123,6 +126,13 @@ const DashboardPage: React.FC = () => {
             <Typography variant="body2">
               Hoş geldiniz, {user?.name}
             </Typography>
+            <IconButton 
+              color="inherit" 
+              onClick={() => setShowConceptMap(!showConceptMap)}
+              title="Kavram Haritası"
+            >
+              <AccountTreeIcon />
+            </IconButton>
             <IconButton color="inherit" onClick={handleLogout}>
               <LogoutIcon />
             </IconButton>
@@ -131,18 +141,22 @@ const DashboardPage: React.FC = () => {
       </AppBar>
 
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h4" component="h1">
-            Çocuk Profilleri
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => setOpenDialog(true)}
-          >
-            Yeni Çocuk Ekle
-          </Button>
-        </Box>
+        {showConceptMap ? (
+          <ConceptMapVisualization />
+        ) : (
+          <>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+              <Typography variant="h4" component="h1">
+                Çocuk Profilleri
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setOpenDialog(true)}
+              >
+                Yeni Çocuk Ekle
+              </Button>
+            </Box>
 
         {children.length === 0 ? (
           <Card sx={{ textAlign: 'center', py: 8 }}>
@@ -245,6 +259,8 @@ const DashboardPage: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+        )}
+          </>
         )}
       </Container>
 
